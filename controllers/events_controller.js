@@ -14,10 +14,12 @@ routing.index = function(req, res){
 routing.create = function(req, res) {
     var new_event = {
         name: req.body.name,
-        date: req.body.date,
-        time: req.body.time,
+        start_date: req.body.start_date,
+        start_time: req.body.start_time,
+        end_date: req.body.end_date,
+        end_time: req.body.end_time,
         description: req.body.description,
-        recurrence: req.body.recurrence
+        repeat: req.body.repeat
     }
     Event.insert(new_event, function(error, event) {
         if (error) return next(error);
@@ -37,10 +39,12 @@ routing.update = function(req, res) {
     console.log(req.body);
     var new_event = {
         name: req.body.name,
-        date: req.body.date,
-        time: req.body.time,
+        start_date: req.body.start_date,
+        start_time: req.body.start_time,
+        end_date: req.body.end_date,
+        end_time: req.body.end_time,
         description: req.body.description,
-        recurrence: req.body.recurrence
+        repeat: req.body.repeat
     }
     Event.updateById(req.params.id, {$set: new_event}, function(err, event){
         if (err) return next(err);
