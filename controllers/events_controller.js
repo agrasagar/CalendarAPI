@@ -36,7 +36,6 @@ routing.show = function(req, res) {
 }
 
 routing.update = function(req, res) {
-    console.log(req.body);
     var new_event = {
         name: req.body.name,
         start_date: req.body.start_date,
@@ -61,11 +60,17 @@ routing.destroy = function(req, res) {
 }
 
 routing.search = function(req, res){
-    console.log(req.params);
-    Event.find().toArray(function(err,events){
+    var req_params = req.body;
+    var query_options = {};
+    if("name" in req_params) query_options["name"] = {'$regex': req_params.name};
+    if("description" in req_params) query_options["description"] = {'$regex': req_params.description};
+
+    console.log(query_options);
+    Event.find(query_options).toArray(function(err,events){
         if (err) return next(err);
         res.send(events);
     })
+
 }
 
 
