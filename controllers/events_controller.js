@@ -78,12 +78,10 @@ routing.destroy = function(req, res) {
 routing.search = function(req, res){
     var req_params = req.body;
     var query_options = {};
-    if("name" in req_params) query_options["name"] = {'$regex': req_params.name};
-    if("description" in req_params) query_options["description"] = {'$regex': req_params.description};
-    if("description" in req_params) query_options["description"] = {'$regex': req_params.description};
+    if("name" in req_params) query_options["name"] = {'$regex': new RegExp(req_params.name, "i")};
+    if("description" in req_params) query_options["description"] = {'$regex': new RegExp(req_params.description, "i")};
     if("start_date" in req_params) query_options["start_date"] = {'$gte': stringToDate(req_params.start_date, "00:00")};
     if("end_date" in req_params) query_options["end_date"] = {'$lte': stringToDate(req_params.end_date, "21:59")};
-
     if("repeat" in req_params) query_options["repeat"] = req.params.repeat;
 
     console.log(query_options);
