@@ -22,7 +22,7 @@ routing.index = function(req, res){
     Event.find().toArray(function(err,events){
         if (err) return next(err);
         res.send(events);
-    })
+      })
 }
 
 //post /events
@@ -34,6 +34,7 @@ routing.create = function(req, res) {
     }
 
     var new_event = get_event_params(req.body)
+
     console.log(new_event);
     Event.insert(new_event, function(error, event) {
         if (error) return next(error);
@@ -67,15 +68,30 @@ routing.update = function(req, res) {
 
 //delete /events/:id
 routing.destroy = function(req, res) {
-    console.log(req.params);
-    Event.removeById(req.params.id, function(err, count){
-        if (err) return next(err);
-        res.send({affectedCount: count});
-    })
+    if(req.params["id"]== "cleanAll"){
+      var c = 1;
+      Event.find().toArray(function(err,events){
+          if (err) return next(err);
+          var allEvents=events;
+          for(var i=0;i<allEvents.length;i++){
+            Event.removeById(allEvents[i]["_id"], function(){res.send("All deleted")});
+          }
+      });
+      return;
+    }
+    //else{
+      console.log(req.params.id);
+      Event.removeById(req.params.id, function(err, count){
+          if (err) return next(err);
+          console.log("I am in ");
+          res.send({affectedCount: count});
+      })
+    //}
 };
 
 //post /events/search
 routing.search = function(req, res){
+
     var req_params = req.body;
     var query_options = {};
     if("name" in req_params) query_options["name"] = {'$regex': new RegExp(req_params.name, "i")};
